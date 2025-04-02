@@ -1,0 +1,6 @@
+with-expecter: true
+outpkg: mocks
+packages:
+  github.com/titanius-getha/gravitum-test-task/domain/user:
+    interfaces:
+      UserRepository:
