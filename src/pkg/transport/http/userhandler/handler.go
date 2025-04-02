@@ -77,7 +77,11 @@ func (h *UserHandler) UpdateUser(ctx *gin.Context) {
 	}
 
 	u, err := h.provider.Update(uint(ID), body.Name)
-	if err != nil {
+
+	if errors.Is(err, user.ErrUserNotFound) {
+		ctx.JSON(http.StatusNotFound, transport.BadResponse(err.Error()))
+		return
+	} else if err != nil {
 		ctx.JSON(http.StatusInternalServerError, transport.BadResponse(transport.ErrInternal.Error()))
 		return
 	}

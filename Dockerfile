@@ -9,7 +9,11 @@ COPY .air.toml ./
 COPY ./src ./
 CMD ["air"]
 
-FROM deps AS prod
+FROM deps AS build_prod
 COPY ./src .
-RUN go build -o /app/main .
-CMD ["/app/main"]
+RUN go build -ldflags="-s -w" -trimpath -o backend .
+
+FROM alpine:latest AS prod
+WORKDIR /app
+COPY --from=build_prod /app/backend ./
+CMD ["./backend"]
